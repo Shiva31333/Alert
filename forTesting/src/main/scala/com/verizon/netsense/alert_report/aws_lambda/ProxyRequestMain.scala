@@ -1,5 +1,14 @@
 package com.verizon.netsense.alert_report.aws_lambda
 
+import java.util.UUID
+
+import com.amazonaws.services.lambda.runtime.events.{APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent}
+import com.amazonaws.services.lambda.runtime.{Context, RequestHandler}
+import com.verizon.netsense.alert_report.database._
+import com.verizon.netsense.alert_report.utils._
+import com.verizon.netsense.alert_report.utils.ObjectMapperUtil._
+
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 object ProxyRequestMain
@@ -49,7 +58,8 @@ object ProxyRequestMain
               case Some(r: Report) =>
                 if(previewReport) {
                   val rules: ReportRules = RawReport.validateRules(r.rules)
-                  val timePeriod: Int = ("""\d+""".r findFirstIn(r.timePeriod.getOrElse("1day"))).getOrElse("1").toInt
+                  val timePeriod: Int =
+                    ("""\d+""".r findFirstIn(r.timePeriod.getOrElse("1day"))).getOrElse("1").trim.toInt
                   val alerts: List[Any] = db.getAlertsForReport(rules, timePeriod)
                   response.setStatusCode(200)
                   response.setBody(toJson(alerts))
@@ -65,6 +75,7 @@ object ProxyRequestMain
           }
         } catch {
           case ex: Exception =>
+            log.error("ERROR: Error in GET Request: " + ex.getMessage); ex.printStackTrace()
             response.setStatusCode(501)
             response.setBody(toJson(ResponseMsg.errorMsg(ex.getMessage)))
         }
@@ -84,6 +95,7 @@ object ProxyRequestMain
           }
         } catch {
           case ex: Exception =>
+            log.error("ERROR: Error in DELETE Request: " + ex.getMessage); ex.printStackTrace()
             response.setStatusCode(501)
             response.setBody(toJson(ResponseMsg.errorMsg(ex.getMessage)))
         }
@@ -104,6 +116,7 @@ object ProxyRequestMain
           }
         } catch {
           case ex: Exception =>
+            log.error("ERROR: Error in POST Request: " + ex.getMessage); ex.printStackTrace()
             response.setStatusCode(501)
             response.setBody(toJson(ResponseMsg.errorMsg(ex.getMessage)))
         }
@@ -157,6 +170,7 @@ object ProxyRequestMain
 
         } catch {
           case ex: Exception =>
+            log.error("ERROR: Error in PUT Request: " + ex.getMessage); ex.printStackTrace()
             response.setStatusCode(501)
             response.setBody(toJson(ResponseMsg.errorMsg(ex.getMessage)))
         }
