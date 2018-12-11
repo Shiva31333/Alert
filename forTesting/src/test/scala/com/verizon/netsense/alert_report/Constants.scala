@@ -29,15 +29,25 @@ object Constants {
   val REQUESTbODY =
     """
       |{
-      |  "reportName": "MyReport",
+      |  "reportName": "MyReport1",
       |  "reportType": "Alert Summary Report",
       |  "timePeriod": "1day",
-      |  "active": true,
+      |  "active": false,
       |  "recipients": [{"userName": "Lakshman", "userEmail": "lakshman.kolliapra@hcl.com"}, {"userName": "John Wood", "userEmail": "john.wood@hcl.com"}],
       |  "rules": "{\"nodeids\":[\"N1\", \"N2\", \"N3\"],\"alarmtypes\": [\"T1\", \"T2\", \"T3\"],\"alertstatus\": \"active\",\"reportcolumns\": [\"nodeid\", \"alarmtype\"]}"
       |}
     """.stripMargin
-
+  val UpdateREQUESTBODY =
+    """
+      |{
+      |  "reportName": "Updated MyReport",
+      |  "reportType": "Alert Summary Report",
+      |  "timePeriod": "1day",
+      |  "active": false,
+      |  "recipients": [{"userName": "Lakshman", "userEmail": "lakshman.kolliapra@hcl.com"}, {"userName": "John Wood", "userEmail": "john.wood@hcl.com"}],
+      |  "rules": "{\"nodeids\":[\"N1\", \"N2\", \"N3\"],\"alarmtypes\": [\"T1\", \"T2\", \"T3\"],\"alertstatus\": \"active\",\"reportcolumns\": [\"nodeid\", \"alarmtype\"]}"
+      |}
+    """.stripMargin
   val REQUESTbODY_backup =
     """
       |"reportId":"12345",
